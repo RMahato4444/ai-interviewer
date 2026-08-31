@@ -80,7 +80,7 @@ function Topbar({ setMobileOpen }) {
                 src={
                   user.profileImage.startsWith("http")
                     ? user.profileImage
-                    : `http://localhost:5000${user.profileImage}`
+                    : `${import.meta.env.VITE_API_URL}${user.profileImage}`
                 }
                 alt={`${userName} profile`}
                 className="h-full w-full object-cover"

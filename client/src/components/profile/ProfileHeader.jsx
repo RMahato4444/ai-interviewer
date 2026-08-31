@@ -361,7 +361,7 @@ function ProfileHeader({
                       "http"
                   )
                 ? displayImage
-                : `http://localhost:5000${displayImage}`
+                : `${import.meta.env.VITE_API_URL}${displayImage}`
             : "";
 
 
