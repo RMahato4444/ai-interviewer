@@ -1,15 +1,23 @@
 @import "tailwindcss";
 
+
+/* ========================================
+   GLOBAL
+======================================== */
+
 * {
     box-sizing: border-box;
 }
+
 
 html {
     scroll-behavior: smooth;
 }
 
+
 body {
     margin: 0;
+
     font-family:
         Inter,
         ui-sans-serif,
@@ -18,13 +26,798 @@ body {
         BlinkMacSystemFont,
         "Segoe UI",
         sans-serif;
+
     background: #f8fafc;
     color: #0f172a;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
 }
+
 
 button,
 input,
 textarea,
 select {
     font: inherit;
+}
+/* ========================================
+   THEME
+======================================== */
+
+html,
+body {
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+html {
+    color-scheme: light;
+}
+
+html.dark {
+    color-scheme: dark;
+}
+
+html.dark body {
+    background: #020617;
+    color: #e2e8f0;
+}
+
+
+/* ========================================
+   DARK MODE SURFACES
+======================================== */
+
+html.dark .bg-white {
+    background-color: #0f172a !important;
+}
+
+html.dark .bg-white\/95 {
+    background-color: rgb(15 23 42 / 0.97) !important;
+}
+
+html.dark .bg-slate-50 {
+    background-color: #020617 !important;
+}
+
+html.dark .bg-slate-100 {
+    background-color: #1e293b !important;
+}
+
+html.dark .bg-slate-200 {
+    background-color: #334155 !important;
+}
+
+html.dark .bg-slate-300 {
+    background-color: #475569 !important;
+}
+
+
+/* ========================================
+   DARK MODE TEXT
+======================================== */
+
+html.dark .text-slate-900 {
+    color: #f8fafc !important;
+}
+
+html.dark .text-slate-800 {
+    color: #e2e8f0 !important;
+}
+
+html.dark .text-slate-700 {
+    color: #cbd5e1 !important;
+}
+
+html.dark .text-slate-600 {
+    color: #cbd5e1 !important;
+}
+
+html.dark .text-slate-500 {
+    color: #94a3b8 !important;
+}
+
+html.dark .text-slate-400 {
+    color: #94a3b8 !important;
+}
+
+
+/* ========================================
+   DARK MODE BORDERS
+======================================== */
+
+html.dark .border-slate-100 {
+    border-color: #1e293b !important;
+}
+
+html.dark .border-slate-200 {
+    border-color: #334155 !important;
+}
+
+html.dark .border-slate-300 {
+    border-color: #475569 !important;
+}
+
+
+/* ========================================
+   DARK MODE INPUTS
+======================================== */
+
+html.dark input,
+html.dark textarea,
+html.dark select {
+    background-color: #0b1120 !important;
+    color: #e2e8f0 !important;
+    border-color: #334155 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+    color: #64748b !important;
+}
+
+html.dark option {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+
+/* ========================================
+   DARK MODE HOVER
+======================================== */
+
+html.dark .hover\:bg-slate-50:hover {
+    background-color: #1e293b !important;
+}
+
+html.dark .hover\:bg-slate-100:hover {
+    background-color: #1e293b !important;
+}
+
+html.dark .hover\:bg-slate-200:hover {
+    background-color: #334155 !important;
+}
+
+
+/* ========================================
+   SETTINGS
+======================================== */
+
+html.dark .settings-save-bar {
+    background-color: rgb(15 23 42 / 0.97) !important;
+    border-color: #334155 !important;
+}
+
+html.dark .settings-theme-active {
+    background-color: #1e293b !important;
+    border-color: #64748b !important;
+}
+
+/* ========================================
+   SETTINGS TOGGLES
+======================================== */
+
+/* LIGHT MODE */
+
+.settings-toggle-off {
+    background-color: #cbd5e1 !important;
+    border: 1px solid #94a3b8;
+}
+
+.settings-toggle-on {
+    background-color: #0f172a !important;
+    border: 1px solid #0f172a;
+}
+
+.settings-toggle-off span,
+.settings-toggle-on span {
+    background-color: #ffffff !important;
+    display: block;
+}
+
+
+/* DARK MODE */
+
+html.dark .settings-toggle-off {
+    background-color: #475569 !important;
+    border-color: #64748b !important;
+}
+
+html.dark .settings-toggle-on {
+    background-color: #e2e8f0 !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.dark .settings-toggle-on span {
+    background-color: #0f172a !important;
+}
+
+html.dark .settings-toggle-off span {
+    background-color: #f8fafc !important;
+}
+
+/* ========================================
+   SIDEBAR ACTIVE ITEM
+======================================== */
+
+.sidebar-nav-active {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+}
+
+
+/* Dark mode */
+
+html.dark .sidebar-nav-active {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+
+/* Active item hover */
+
+.sidebar-nav-active:hover {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+}
+
+html.dark .sidebar-nav-active:hover {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+}
+
+/* ========================================
+   TOPBAR SEARCH
+======================================== */
+
+.topbar-search {
+    background-color: #f8fafc;
+}
+
+
+/* Dark mode */
+
+html.dark .topbar-search {
+    background-color: #020617 !important;
+    border-color: #334155 !important;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.02);
+}
+
+html.dark .topbar-search input {
+    background-color: transparent !important;
+    color: #e2e8f0 !important;
+}
+
+html.dark .topbar-search input::placeholder {
+    color: #64748b !important;
+}
+
+/* ========================================
+   CLICKABLE ELEMENTS
+======================================== */
+
+button,
+a,
+select,
+[role="button"],
+[role="switch"] {
+    cursor: pointer;
+}
+
+button:disabled,
+button[disabled] {
+    cursor: not-allowed;
+}
+
+/* ========================================
+   PUBLIC AUTH / LANDING BUTTONS
+======================================== */
+
+/* BLUE BUTTON */
+
+.auth-blue-button {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    border: 1px solid #2563eb !important;
+}
+
+.auth-blue-button:hover {
+    background-color: #93c5fd !important;
+    border-color: #93c5fd !important;
+    color: #1e3a8a !important;
+}
+
+
+/* GREEN BUTTON */
+
+.auth-green-button {
+    background-color: #16a34a !important;
+    color: #ffffff !important;
+    border: 1px solid #16a34a !important;
+}
+
+.auth-green-button:hover {
+    background-color: #86efac !important;
+    border-color: #86efac !important;
+    color: #14532d !important;
+}
+
+
+/* AUTH BACK BUTTON */
+
+.auth-back-button {
+    color: #64748b !important;
+    border: 1px solid #cbd5e1 !important;
+    background-color: transparent !important;
+}
+
+.auth-back-button:hover {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+}
+
+
+/* DARK MODE BACK BUTTON */
+
+html.dark .auth-back-button {
+    color: #94a3b8 !important;
+    border-color: #475569 !important;
+    background-color: transparent !important;
+}
+
+html.dark .auth-back-button:hover {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+
+/* CLICKABLE */
+
+.auth-blue-button,
+.auth-green-button,
+.auth-back-button {
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+.auth-blue-button:hover,
+.auth-green-button:hover,
+.auth-back-button:hover {
+    transform: translateY(-1px);
+}
+
+/* ========================================
+   LANDING PAGE THEME
+======================================== */
+
+.landing-page {
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #0f172a;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.landing-nav-button {
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #475569;
+}
+
+.landing-nav-button:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+
+/* Dark */
+
+html.dark .landing-page {
+    background: #020617;
+    color: #f8fafc;
+}
+
+html.dark .landing-nav-button {
+    border-color: #334155;
+    background: #0f172a;
+    color: #cbd5e1;
+}
+
+html.dark .landing-nav-button:hover {
+    background: #1e293b;
+    color: #ffffff;
+}
+
+/* ========================================
+   LANDING PAGE BADGE
+======================================== */
+
+.landing-badge {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #2563eb;
+}
+
+
+/* Dark mode */
+
+html.dark .landing-badge {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+/* ========================================
+   LOGIN / AUTH PAGE
+======================================== */
+
+.auth-page {
+    background: #f8fafc;
+    color: #0f172a;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+/* Login card */
+
+.auth-card {
+    background-color: #ffffff;
+    border-color: #e2e8f0;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+/* Theme button */
+
+.auth-theme-toggle {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+}
+
+.auth-theme-toggle:hover {
+    background-color: #eff6ff;
+    border-color: #93c5fd;
+    color: #2563eb;
+}
+
+
+/* ========================================
+   DARK MODE
+======================================== */
+
+html.dark .auth-page {
+    background: #020617;
+    color: #f8fafc;
+}
+
+
+html.dark .auth-card {
+    background-color: #0f172a;
+    border-color: #1e293b;
+}
+
+
+html.dark .auth-theme-toggle {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+
+html.dark .auth-theme-toggle:hover {
+    background-color: #1e293b;
+    border-color: #475569;
+    color: #f8fafc;
+}
+
+/* ========================================
+   ATTRACTIVE LANDING BACKGROUND
+   ADD-ONLY
+======================================== */
+
+.landing-page {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+
+/* ========================================
+   SOFT GRID
+======================================== */
+
+.landing-page {
+    background-image:
+        linear-gradient(
+            rgb(15 23 42 / 0.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgb(15 23 42 / 0.035) 1px,
+            transparent 1px
+        );
+
+    background-size: 42px 42px;
+}
+
+
+/* ========================================
+   LARGE BLUE AURA
+======================================== */
+
+.landing-page::before {
+    content: "";
+    position: absolute;
+
+    width: 720px;
+    height: 720px;
+
+    top: -300px;
+    left: -240px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgb(37 99 235 / 0.22) 0%,
+            rgb(59 130 246 / 0.12) 28%,
+            rgb(96 165 250 / 0.06) 48%,
+            transparent 72%
+        );
+
+    filter: blur(25px);
+
+    pointer-events: none;
+
+    z-index: -2;
+
+    animation: landing-blue-float 12s ease-in-out infinite alternate;
+}
+
+
+/* ========================================
+   GREEN AURA
+======================================== */
+
+.landing-page::after {
+    content: "";
+    position: absolute;
+
+    width: 650px;
+    height: 650px;
+
+    right: -260px;
+    bottom: -280px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgb(34 197 94 / 0.18) 0%,
+            rgb(74 222 128 / 0.10) 30%,
+            rgb(134 239 172 / 0.05) 48%,
+            transparent 72%
+        );
+
+    filter: blur(28px);
+
+    pointer-events: none;
+
+    z-index: -2;
+
+    animation: landing-green-float 14s ease-in-out infinite alternate;
+}
+
+
+/* ========================================
+   CENTER GLOW
+======================================== */
+
+.landing-page main {
+    position: relative;
+}
+
+
+.landing-page main::before {
+    content: "";
+
+    position: absolute;
+
+    width: 500px;
+    height: 500px;
+
+    top: 40px;
+    left: 25%;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgb(59 130 246 / 0.08),
+            transparent 68%
+        );
+
+    filter: blur(20px);
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* ========================================
+   LIGHT MODE
+======================================== */
+
+html:not(.dark) .landing-page {
+    background-color: #f8fafc;
+
+    background-image:
+        linear-gradient(
+            rgb(15 23 42 / 0.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgb(15 23 42 / 0.035) 1px,
+            transparent 1px
+        );
+}
+
+
+/* ========================================
+   DARK MODE
+======================================== */
+
+html.dark .landing-page {
+    background-color: #020617;
+
+    background-image:
+        linear-gradient(
+            rgb(148 163 184 / 0.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgb(148 163 184 / 0.035) 1px,
+            transparent 1px
+        );
+}
+
+
+html.dark .landing-page::before {
+    background:
+        radial-gradient(
+            circle,
+            rgb(37 99 235 / 0.28) 0%,
+            rgb(59 130 246 / 0.14) 28%,
+            rgb(96 165 250 / 0.07) 48%,
+            transparent 72%
+        );
+}
+
+
+html.dark .landing-page::after {
+    background:
+        radial-gradient(
+            circle,
+            rgb(34 197 94 / 0.20) 0%,
+            rgb(74 222 128 / 0.11) 30%,
+            rgb(134 239 172 / 0.05) 48%,
+            transparent 72%
+        );
+}
+
+
+html.dark .landing-page main::before {
+    background:
+        radial-gradient(
+            circle,
+            rgb(59 130 246 / 0.11),
+            transparent 68%
+        );
+}
+
+
+/* ========================================
+   ANIMATION
+======================================== */
+
+@keyframes landing-blue-float {
+    from {
+        transform: translate3d(
+            0,
+            0,
+            0
+        ) scale(1);
+    }
+
+    to {
+        transform: translate3d(
+            45px,
+            25px,
+            0
+        ) scale(1.08);
+    }
+}
+
+
+@keyframes landing-green-float {
+    from {
+        transform: translate3d(
+            0,
+            0,
+            0
+        ) scale(1);
+    }
+
+    to {
+        transform: translate3d(
+            -40px,
+            -30px,
+            0
+        ) scale(1.1);
+    }
+}
+
+
+/* ========================================
+   REDUCE MOTION
+======================================== */
+
+@media (
+    prefers-reduced-motion: reduce
+) {
+    .landing-page::before,
+    .landing-page::after {
+        animation: none;
+    }
+}
+
+/* ========================================
+   TOPBAR THEME TOGGLE
+======================================== */
+
+.topbar-theme-toggle {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+}
+
+.topbar-theme-toggle:hover {
+    background-color: #e2e8f0;
+    color: #0f172a;
+}
+
+
+/* Dark mode */
+
+html.dark .topbar-theme-toggle {
+    background-color: #0b1120;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+html.dark .topbar-theme-toggle:hover {
+    background-color: #1e293b;
+    color: #ffffff;
 }

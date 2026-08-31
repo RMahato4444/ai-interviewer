@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const path = require("path");
+const fs = require("fs");
 
 const User = require("../models/User");
 
@@ -204,9 +206,418 @@ const getCurrentUser = async (req, res) => {
     });
   }
 };
+
+// ========================================
+// UPDATE PROFILE
+// ========================================
+
+const updateProfile = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      targetRole,
+      education,
+      bio,
+    } = req.body;
+
+    // --------------------------------
+    // Basic validation
+    // --------------------------------
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Name is required",
+      });
+    }
+
+    if (!email || !email.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    const normalizedEmail =
+      email.trim().toLowerCase();
+
+    // --------------------------------
+    // Check whether another user
+    // already uses this email
+    // --------------------------------
+
+    const existingUser =
+      await User.findOne({
+        email: normalizedEmail,
+        _id: {
+          $ne: req.userId,
+        },
+      });
+
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message:
+          "Email is already being used by another account",
+      });
+    }
+
+    // --------------------------------
+    // Update user
+    // --------------------------------
+
+    const user =
+      await User.findById(
+        req.userId
+      );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    user.name =
+      name.trim();
+
+    user.email =
+      normalizedEmail;
+
+    user.targetRole =
+      targetRole?.trim() || "";
+
+    user.education =
+      education?.trim() || "";
+
+    user.bio =
+      bio?.trim() || "";
+
+    await user.save();
+
+    // --------------------------------
+    // Response
+    // --------------------------------
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "Profile updated successfully",
+
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        targetRole:
+          user.targetRole,
+        education:
+          user.education,
+        bio:
+          user.bio,
+        profileImage:
+          user.profileImage,
+        createdAt:
+          user.createdAt,
+      },
+    });
+
+  } catch (error) {
+
+    console.error(
+      "UPDATE PROFILE ERROR:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Server error while updating profile",
+    });
+  }
+};
+
+// ========================================
+// UPDATE PROFILE IMAGE
+// ========================================
+
+const updateProfileImage = async (
+    req,
+    res
+) => {
+    try {
+
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Please upload an image",
+            });
+        }
+
+
+        const user =
+            await User.findById(
+                req.userId
+            );
+
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message:
+                    "User not found",
+            });
+        }
+
+
+        // --------------------------------
+        // Delete previous image
+        // --------------------------------
+
+        if (
+            user.profileImage
+        ) {
+
+            const previousImagePath =
+                path.join(
+                    __dirname,
+                    "..",
+                    user.profileImage
+                        .replace(
+                            "/uploads/",
+                            "uploads/"
+                        )
+                );
+
+            try {
+
+                if (
+                    fs.existsSync(
+                        previousImagePath
+                    )
+                ) {
+                    fs.unlinkSync(
+                        previousImagePath
+                    );
+                }
+
+            } catch (
+                deleteError
+            ) {
+
+                console.error(
+                    "OLD PROFILE IMAGE DELETE ERROR:",
+                    deleteError
+                );
+
+            }
+        }
+
+
+        // --------------------------------
+        // Save new image path
+        // --------------------------------
+
+        const profileImage =
+            `/uploads/profile-images/${req.file.filename}`;
+
+
+        user.profileImage =
+            profileImage;
+
+
+        await user.save();
+
+
+        return res.status(200).json({
+            success: true,
+
+            message:
+                "Profile image updated successfully",
+
+            user: {
+                id:
+                    user._id,
+
+                name:
+                    user.name,
+
+                email:
+                    user.email,
+
+                targetRole:
+                    user.targetRole,
+
+                education:
+                    user.education,
+
+                bio:
+                    user.bio,
+
+                profileImage:
+                    user.profileImage,
+
+                createdAt:
+                    user.createdAt,
+            },
+        });
+
+    } catch (error) {
+
+        console.error(
+            "UPDATE PROFILE IMAGE ERROR:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message:
+                "Server error while updating profile image",
+        });
+    }
+};
+
+// ========================================
+// REMOVE PROFILE IMAGE
+// ========================================
+
+const removeProfileImage = async (
+    req,
+    res
+) => {
+
+    try {
+
+        const user =
+            await User.findById(
+                req.userId
+            );
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message:
+                    "User not found",
+            });
+        }
+
+
+        // --------------------------------
+        // Delete image file
+        // --------------------------------
+
+        if (
+            user.profileImage
+        ) {
+
+            const relativeImagePath =
+                user.profileImage
+                    .replace(
+                        "/uploads/",
+                        ""
+                    );
+
+
+            const imagePath =
+                path.join(
+                    __dirname,
+                    "../uploads",
+                    relativeImagePath
+                );
+
+
+            try {
+
+                if (
+                    fs.existsSync(
+                        imagePath
+                    )
+                ) {
+
+                    fs.unlinkSync(
+                        imagePath
+                    );
+
+                }
+
+            } catch (
+                fileError
+            ) {
+
+                console.error(
+                    "PROFILE IMAGE DELETE ERROR:",
+                    fileError
+                );
+
+            }
+        }
+
+
+        // --------------------------------
+        // Clear MongoDB field
+        // --------------------------------
+
+        user.profileImage =
+            "";
+
+        await user.save();
+
+
+        return res.status(200).json({
+            success: true,
+
+            message:
+                "Profile image removed successfully",
+
+            user: {
+                id:
+                    user._id,
+
+                name:
+                    user.name,
+
+                email:
+                    user.email,
+
+                targetRole:
+                    user.targetRole,
+
+                education:
+                    user.education,
+
+                bio:
+                    user.bio,
+
+                profileImage:
+                    user.profileImage,
+
+                createdAt:
+                    user.createdAt,
+            },
+        });
+
+    } catch (error) {
+
+        console.error(
+            "REMOVE PROFILE IMAGE ERROR:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message:
+                "Server error while removing profile image",
+        });
+    }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   generateToken,
   getCurrentUser,
+  updateProfile,
+  updateProfileImage,
+  removeProfileImage,
 };

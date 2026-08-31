@@ -1,4 +1,6 @@
-import { useState } from "react";
+import {
+    useState,
+} from "react";
 
 import {
     Save,
@@ -8,37 +10,107 @@ import {
     GraduationCap,
 } from "lucide-react";
 
-function ProfileForm() {
-    const [name, setName] = useState("Rahul Mahato");
+import {
+    updateProfile,
+} from "../../services/api";
 
-    const [email, setEmail] =
-        useState("rahul@example.com");
 
-    const [role, setRole] =
-        useState("MERN Stack Developer");
+function ProfileForm({
+    user,
+    onProfileUpdated,
+    onError,
+}) {
 
-    const [education, setEducation] =
-        useState("B.Tech Computer Science");
+    const [name, setName] =
+    useState(user?.name || "");
 
-    const [bio, setBio] = useState(
-        "Aspiring software developer preparing for technical interviews."
-    );
+const [email, setEmail] =
+    useState(user?.email || "");
 
-    const [saved, setSaved] = useState(false);
+const [role, setRole] =
+    useState(user?.targetRole || "");
 
-    const handleSave = (event) => {
-        event.preventDefault();
+const [education, setEducation] =
+    useState(user?.education || "");
 
-        setSaved(true);
+const [bio, setBio] =
+    useState(user?.bio || "");
 
-        setTimeout(() => {
-            setSaved(false);
-        }, 2500);
-    };
+    const [saved, setSaved] =
+        useState(false);
+
+    const [saving, setSaving] =
+        useState(false);
+
+
+    // ========================================
+    // SAVE
+    // ========================================
+
+    const handleSave =
+        async (event) => {
+
+            event.preventDefault();
+
+            try {
+
+                setSaving(true);
+
+                setSaved(false);
+
+                onError("");
+
+
+                const data =
+                    await updateProfile({
+                        name,
+                        email,
+                        targetRole:
+                            role,
+                        education,
+                        bio,
+                    });
+
+
+                onProfileUpdated(
+                    data.user
+                );
+
+
+                setSaved(true);
+
+
+                setTimeout(() => {
+
+                    setSaved(false);
+
+                }, 2500);
+
+            } catch (error) {
+
+                console.error(
+                    "PROFILE UPDATE ERROR:",
+                    error
+                );
+
+                onError(
+                    error.message ||
+                    "Failed to update profile."
+                );
+
+            } finally {
+
+                setSaving(false);
+
+            }
+        };
+
 
     return (
         <section className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+
             <div className="mb-6">
+
                 <h2 className="text-lg font-bold text-slate-900">
                     Personal Information
                 </h2>
@@ -47,77 +119,122 @@ function ProfileForm() {
                     Update the information used for your AI
                     interview experience.
                 </p>
+
             </div>
 
+
             <form
-                onSubmit={handleSave}
+                onSubmit={
+                    handleSave
+                }
                 className="space-y-5"
             >
+
                 <div className="grid gap-5 sm:grid-cols-2">
+
                     <InputField
                         icon={User}
                         label="Full Name"
                         value={name}
-                        onChange={setName}
+                        onChange={
+                            setName
+                        }
                     />
+
 
                     <InputField
                         icon={Mail}
                         label="Email"
                         value={email}
-                        onChange={setEmail}
+                        onChange={
+                            setEmail
+                        }
                         type="email"
                     />
+
                 </div>
 
+
                 <InputField
-                    icon={BriefcaseBusiness}
+                    icon={
+                        BriefcaseBusiness
+                    }
                     label="Target Role"
                     value={role}
-                    onChange={setRole}
+                    onChange={
+                        setRole
+                    }
                 />
+
 
                 <InputField
-                    icon={GraduationCap}
+                    icon={
+                        GraduationCap
+                    }
                     label="Education"
                     value={education}
-                    onChange={setEducation}
+                    onChange={
+                        setEducation
+                    }
                 />
 
+
                 <div>
+
                     <label className="mb-2 block text-sm font-medium text-slate-700">
                         About You
                     </label>
 
+
                     <textarea
                         value={bio}
                         onChange={(event) =>
-                            setBio(event.target.value)
+                            setBio(
+                                event.target.value
+                            )
                         }
                         rows={4}
                         className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:bg-white"
                     />
+
                 </div>
 
+
                 <div className="flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center">
+
                     <button
                         type="submit"
-                        className="flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+                        disabled={
+                            saving
+                        }
+                        className="flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
                     >
+
                         <Save size={16} />
-                        Save Changes
+
+                        {saving
+                            ? "Saving..."
+                            : "Save Changes"}
+
                     </button>
 
+
                     {saved && (
+
                         <span className="text-sm font-medium text-green-600">
                             Changes saved successfully.
                         </span>
+
                     )}
+
                 </div>
+
             </form>
+
         </section>
     );
 }
+
 
 function InputField({
     icon: Icon,
@@ -126,29 +243,39 @@ function InputField({
     onChange,
     type = "text",
 }) {
+
     return (
         <div>
+
             <label className="mb-2 block text-sm font-medium text-slate-700">
                 {label}
             </label>
 
+
             <div className="relative">
+
                 <Icon
                     size={17}
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
                 />
 
+
                 <input
                     type={type}
                     value={value}
                     onChange={(event) =>
-                        onChange(event.target.value)
+                        onChange(
+                            event.target.value
+                        )
                     }
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-800 outline-none transition focus:border-slate-900 focus:bg-white"
                 />
+
             </div>
+
         </div>
     );
 }
+
 
 export default ProfileForm;
