@@ -2,8 +2,8 @@ import { BriefcaseBusiness, Gauge, ListChecks, Mic2, Play } from "lucide-react";
 
 function InterviewSummary({
   role,
-  experience,
-  type,
+  // experience,
+  // type,
   difficulty,
   questions,
   mode,

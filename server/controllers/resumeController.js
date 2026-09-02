@@ -7,7 +7,8 @@ const mammoth = require("mammoth");
 const Resume = require("../models/Resume");
 const {
     analyzeResume,
-} = require("../services/geminiService");
+} = require("../services/groqService");
+// } = require("../services/geminiService");
 
 
 

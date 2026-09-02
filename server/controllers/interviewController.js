@@ -6,7 +6,8 @@ const {
   generateInterviewQuestions,
   evaluateInterviewAnswer,
   generateFinalInterviewFeedback,
-} = require("../services/geminiService");
+} = require("../services/groqService");
+// } = require("../services/geminiService");
 
 // ========================================
 // CREATE INTERVIEW
