@@ -14,6 +14,13 @@ import PerformanceCard from "../components/dashboard/PerformanceCard";
 import { getInterviews, getResumes } from "../services/api";
 
 function Dashboard() {
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+};
   const [userName] = useState(() => {
     const storedUser = localStorage.getItem("user");
 
@@ -151,7 +158,7 @@ function Dashboard() {
           </p>
 
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Good morning, {userName} 👋
+            {getGreeting()}, {userName} 👋
           </h1>
 
           <p className="mt-2 max-w-xl text-slate-500">

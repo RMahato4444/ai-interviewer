@@ -46,18 +46,21 @@ function Login() {
     try {
       setLoading(true);
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-        method: "POST",
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            email,
+            password,
+          }),
         },
-
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      );
 
       const data = await response.json();
 
@@ -120,7 +123,14 @@ function Login() {
       >
         {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
       </button>
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8">
+      {/* <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8"> */}
+      <div
+        className={`w-full max-w-md rounded-2xl border p-8 shadow-xl transition-colors duration-300 ${
+          theme === "dark"
+            ? "border-slate-800 bg-slate-900"
+            : "border-slate-200 bg-white shadow-slate-200/60"
+        }`}
+      >
         {/* Back */}
 
         <Link
@@ -131,9 +141,23 @@ function Login() {
           Back to Home
         </Link>
 
-        <h1 className="mt-6 text-3xl font-bold text-white">Welcome back</h1>
+        {/* <h1 className="mt-6 text-3xl font-bold text-white">Welcome back</h1> */}
+        <h1
+          className={`mt-6 text-3xl font-bold transition-colors duration-300 ${
+            theme === "dark" ? "text-white" : "text-slate-900"
+          }`}
+        >
+          Welcome back
+        </h1>
 
-        <p className="mt-2 text-slate-400">
+        {/* <p className="mt-2 text-slate-400">
+          Sign in to continue your interview preparation.
+        </p> */}
+        <p
+          className={`mt-2 transition-colors duration-300 ${
+            theme === "dark" ? "text-slate-400" : "text-slate-500"
+          }`}
+        >
           Sign in to continue your interview preparation.
         </p>
 
@@ -149,21 +173,40 @@ function Login() {
           {/* EMAIL */}
 
           <div>
-            <label className="mb-2 block text-sm text-slate-300">Email</label>
+            {/* <label className="mb-2 block text-sm text-slate-300">Email</label> */}
+            <label
+              className={`mb-2 block text-sm transition-colors duration-300 ${
+                theme === "dark" ? "text-slate-300" : "text-slate-700"
+              }`}
+            >
+              Email
+            </label>
 
             <input
               type="email"
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-400"
+              // className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-400"
+              className={`w-full rounded-xl border px-4 py-3 outline-none transition-colors duration-300 ${
+                theme === "dark"
+                  ? "border-slate-700 bg-slate-950 text-white placeholder:text-slate-500 focus:border-blue-400"
+                  : "border-slate-300 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:border-blue-500"
+              }`}
             />
           </div>
 
           {/* PASSWORD */}
 
           <div>
-            <label className="mb-2 block text-sm text-slate-300">
+            {/* <label className="mb-2 block text-sm text-slate-300">
+              Password
+            </label> */}
+            <label
+              className={`mb-2 block text-sm transition-colors duration-300 ${
+                theme === "dark" ? "text-slate-300" : "text-slate-700"
+              }`}
+            >
               Password
             </label>
 
@@ -172,7 +215,12 @@ function Login() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-400"
+              // className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-blue-400"
+              className={`w-full rounded-xl border px-4 py-3 outline-none transition-colors duration-300 ${
+                theme === "dark"
+                  ? "border-slate-700 bg-slate-950 text-white placeholder:text-slate-500 focus:border-blue-400"
+                  : "border-slate-300 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus:border-blue-500"
+              }`}
             />
           </div>
 
@@ -187,7 +235,12 @@ function Login() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-400">
+        {/* <p className="mt-6 text-center text-sm text-slate-400"> */}
+        <p
+          className={`mt-6 text-center text-sm transition-colors duration-300 ${
+            theme === "dark" ? "text-slate-400" : "text-slate-500"
+          }`}
+        >
           Don't have an account?{" "}
           <Link
             to="/register"

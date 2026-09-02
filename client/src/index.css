@@ -42,6 +42,7 @@ textarea,
 select {
     font: inherit;
 }
+
 /* ========================================
    THEME
 ======================================== */
@@ -543,15 +544,11 @@ html.dark .auth-theme-toggle:hover {
 
 .landing-page {
     background-image:
-        linear-gradient(
+        linear-gradient(rgb(15 23 42 / 0.035) 1px,
+            transparent 1px),
+        linear-gradient(90deg,
             rgb(15 23 42 / 0.035) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgb(15 23 42 / 0.035) 1px,
-            transparent 1px
-        );
+            transparent 1px);
 
     background-size: 42px 42px;
 }
@@ -574,13 +571,11 @@ html.dark .auth-theme-toggle:hover {
     border-radius: 50%;
 
     background:
-        radial-gradient(
-            circle,
+        radial-gradient(circle,
             rgb(37 99 235 / 0.22) 0%,
             rgb(59 130 246 / 0.12) 28%,
             rgb(96 165 250 / 0.06) 48%,
-            transparent 72%
-        );
+            transparent 72%);
 
     filter: blur(25px);
 
@@ -609,13 +604,11 @@ html.dark .auth-theme-toggle:hover {
     border-radius: 50%;
 
     background:
-        radial-gradient(
-            circle,
+        radial-gradient(circle,
             rgb(34 197 94 / 0.18) 0%,
             rgb(74 222 128 / 0.10) 30%,
             rgb(134 239 172 / 0.05) 48%,
-            transparent 72%
-        );
+            transparent 72%);
 
     filter: blur(28px);
 
@@ -650,11 +643,9 @@ html.dark .auth-theme-toggle:hover {
     border-radius: 50%;
 
     background:
-        radial-gradient(
-            circle,
+        radial-gradient(circle,
             rgb(59 130 246 / 0.08),
-            transparent 68%
-        );
+            transparent 68%);
 
     filter: blur(20px);
 
@@ -672,15 +663,11 @@ html:not(.dark) .landing-page {
     background-color: #f8fafc;
 
     background-image:
-        linear-gradient(
+        linear-gradient(rgb(15 23 42 / 0.035) 1px,
+            transparent 1px),
+        linear-gradient(90deg,
             rgb(15 23 42 / 0.035) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgb(15 23 42 / 0.035) 1px,
-            transparent 1px
-        );
+            transparent 1px);
 }
 
 
@@ -692,49 +679,39 @@ html.dark .landing-page {
     background-color: #020617;
 
     background-image:
-        linear-gradient(
+        linear-gradient(rgb(148 163 184 / 0.035) 1px,
+            transparent 1px),
+        linear-gradient(90deg,
             rgb(148 163 184 / 0.035) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgb(148 163 184 / 0.035) 1px,
-            transparent 1px
-        );
+            transparent 1px);
 }
 
 
 html.dark .landing-page::before {
     background:
-        radial-gradient(
-            circle,
+        radial-gradient(circle,
             rgb(37 99 235 / 0.28) 0%,
             rgb(59 130 246 / 0.14) 28%,
             rgb(96 165 250 / 0.07) 48%,
-            transparent 72%
-        );
+            transparent 72%);
 }
 
 
 html.dark .landing-page::after {
     background:
-        radial-gradient(
-            circle,
+        radial-gradient(circle,
             rgb(34 197 94 / 0.20) 0%,
             rgb(74 222 128 / 0.11) 30%,
             rgb(134 239 172 / 0.05) 48%,
-            transparent 72%
-        );
+            transparent 72%);
 }
 
 
 html.dark .landing-page main::before {
     background:
-        radial-gradient(
-            circle,
+        radial-gradient(circle,
             rgb(59 130 246 / 0.11),
-            transparent 68%
-        );
+            transparent 68%);
 }
 
 
@@ -744,38 +721,30 @@ html.dark .landing-page main::before {
 
 @keyframes landing-blue-float {
     from {
-        transform: translate3d(
-            0,
-            0,
-            0
-        ) scale(1);
+        transform: translate3d(0,
+                0,
+                0) scale(1);
     }
 
     to {
-        transform: translate3d(
-            45px,
-            25px,
-            0
-        ) scale(1.08);
+        transform: translate3d(45px,
+                25px,
+                0) scale(1.08);
     }
 }
 
 
 @keyframes landing-green-float {
     from {
-        transform: translate3d(
-            0,
-            0,
-            0
-        ) scale(1);
+        transform: translate3d(0,
+                0,
+                0) scale(1);
     }
 
     to {
-        transform: translate3d(
-            -40px,
-            -30px,
-            0
-        ) scale(1.1);
+        transform: translate3d(-40px,
+                -30px,
+                0) scale(1.1);
     }
 }
 
@@ -784,9 +753,8 @@ html.dark .landing-page main::before {
    REDUCE MOTION
 ======================================== */
 
-@media (
-    prefers-reduced-motion: reduce
-) {
+@media (prefers-reduced-motion: reduce) {
+
     .landing-page::before,
     .landing-page::after {
         animation: none;
