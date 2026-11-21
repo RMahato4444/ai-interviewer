@@ -1,6 +1,4 @@
-import {
-    useState,
-} from "react";
+import { useEffect, useState } from "react";
 
 import {
     ArrowLeft,
@@ -11,6 +9,8 @@ import {
 
 import {
     Link,
+    useLocation,
+    useNavigate,
 } from "react-router-dom";
 
 import DashboardLayout from "../components/layout/DashboardLayout";
@@ -21,91 +21,117 @@ import ResumeAnalysis from "../components/resume/ResumeAnalysis";
 
 import {
     analyzeResume,
+    getResumeById,
 } from "../services/api";
 
-
 function ResumeAnalyzer() {
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    const [resume, setResume] =
-        useState(null);
+    const [resume, setResume] = useState(null);
+    const [analysis, setAnalysis] = useState(null);
+    const [analyzing, setAnalyzing] = useState(false);
+    const [loadingSavedResume, setLoadingSavedResume] = useState(false);
+    const [error, setError] = useState("");
 
-    const [analysis, setAnalysis] =
-        useState(null);
+    // ========================================
+    // OPEN A SAVED RESUME FROM GLOBAL SEARCH
+    // ========================================
 
-    const [analyzing, setAnalyzing] =
-        useState(false);
+    useEffect(() => {
+        const resumeId = location.state?.resumeId;
 
-    const [error, setError] =
-        useState("");
+        if (!resumeId) return;
 
+        let cancelled = false;
+
+        const loadSavedResume = async () => {
+            try {
+                setLoadingSavedResume(true);
+                setError("");
+
+                const data = await getResumeById(resumeId);
+
+                if (cancelled) return;
+
+                const savedResume = {
+                    ...data.resume,
+                    id: data.resume._id || data.resume.id,
+                };
+
+                setResume(savedResume);
+                setAnalysis(savedResume.aiAnalysis || null);
+            } catch (error) {
+                if (cancelled) return;
+
+                console.error("LOAD SAVED RESUME ERROR:", error);
+
+                setError(
+                    error.message || "Failed to load the selected resume."
+                );
+            } finally {
+                if (!cancelled) {
+                    setLoadingSavedResume(false);
+
+                    // Remove the one-time navigation state so refreshing
+                    // the page does not repeat the lookup.
+                    navigate(location.pathname, {
+                        replace: true,
+                        state: null,
+                    });
+                }
+            }
+        };
+
+        loadSavedResume();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [location.state?.resumeId, location.pathname, navigate]);
 
     // ========================================
     // RESUME UPLOAD SUCCESS
     // ========================================
 
-    const handleUploadSuccess =
-        (uploadedResume) => {
+    const handleUploadSuccess = (uploadedResume) => {
+        setResume(uploadedResume);
+        setAnalysis(null);
+        setError("");
 
-            setResume(
-                uploadedResume
-            );
-
-            setAnalysis(null);
-
-            setError("");
-        };
-
+        window.dispatchEvent(new CustomEvent("app-data-change"));
+    };
 
     // ========================================
     // ANALYZE RESUME
     // ========================================
 
-    const handleAnalyze =
-        async () => {
+    const handleAnalyze = async () => {
+        if (!resume?.id) {
+            setError("Please upload a resume first.");
+            return;
+        }
 
-            if (!resume?.id) {
+        try {
+            setAnalyzing(true);
+            setError("");
 
-                setError(
-                    "Please upload a resume first."
-                );
+            const data = await analyzeResume(resume.id);
 
-                return;
-            }
+            setAnalysis(data.analysis);
 
-            try {
+            // Refresh the topbar search and notification activity.
+            window.dispatchEvent(new CustomEvent("app-data-change"));
+        } catch (error) {
+            console.error("RESUME ANALYSIS ERROR:", error);
 
-                setAnalyzing(true);
-
-                setError("");
-
-                const data =
-                    await analyzeResume(
-                        resume.id
-                    );
-
-                setAnalysis(
-                    data.analysis
-                );
-
-            } catch (error) {
-
-                console.error(
-                    "RESUME ANALYSIS ERROR:",
-                    error
-                );
-
-                setError(
-                    error.message ||
-                    "Failed to analyze resume."
-                );
-
-            } finally {
-
-                setAnalyzing(false);
-
-            }
-        };
-
+            setError(
+                error.message || "Failed to analyze resume."
+            );
+        } finally {
+            setAnalyzing(false);
+        }
+    };
 
     return (
         <DashboardLayout>
@@ -122,7 +148,6 @@ function ResumeAnalyzer() {
                     Back to Dashboard
                 </Link>
 
-
                 <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
 
                     <div>
@@ -130,11 +155,8 @@ function ResumeAnalyzer() {
                         <div className="flex items-center gap-2">
 
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-white">
-
                                 <Sparkles size={20} />
-
                             </div>
-
 
                             <span className="text-sm font-semibold text-slate-500">
                                 AI Resume Analysis
@@ -142,11 +164,9 @@ function ResumeAnalyzer() {
 
                         </div>
 
-
                         <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                             Optimize your resume
                         </h1>
-
 
                         <p className="mt-2 max-w-2xl text-slate-500">
                             Upload your resume and get AI-powered
@@ -156,74 +176,54 @@ function ResumeAnalyzer() {
 
                     </div>
 
-
                     <div className="flex items-center gap-2 text-xs text-slate-500">
-
                         <ShieldCheck size={16} />
-
                         Your resume stays private
-
                     </div>
 
                 </div>
 
             </section>
 
-
             {/* Error */}
 
             {error && (
-
                 <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
                     {error}
                 </div>
-
             )}
 
+            {/* Loading saved search result */}
+
+            {loadingSavedResume && (
+                <div className="mb-6 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
+                    Loading selected resume...
+                </div>
+            )}
 
             {/* Upload */}
 
             <section className="mb-8">
 
                 <div className="mb-3 flex items-center gap-2">
-
                     <FileText size={18} />
 
                     <h2 className="font-bold text-slate-900">
                         Upload Resume
                     </h2>
-
                 </div>
 
-
                 <ResumeUpload
-                    onUploadSuccess={
-                        handleUploadSuccess
-                    }
-
-                    onError={
-                        setError
-                    }
-
-                    resume={
-                        resume
-                    }
-
+                    onUploadSuccess={handleUploadSuccess}
+                    onError={setError}
+                    resume={resume}
                     onRemove={() => {
-
-                        setResume(
-                            null
-                        );
-
-                        setAnalysis(
-                            null
-                        );
-
+                        setResume(null);
+                        setAnalysis(null);
                     }}
                 />
 
             </section>
-
 
             {/* Analysis */}
 
@@ -237,17 +237,13 @@ function ResumeAnalyzer() {
                             Resume Analysis
                         </h2>
 
-
                         <p className="mt-1 text-sm text-slate-500">
-
                             {analysis
                                 ? "AI-powered analysis of your resume."
                                 : "Your resume has been uploaded. Analyze it to get AI-powered feedback."}
-
                         </p>
 
                     </div>
-
 
                     {!analysis && (
 
@@ -267,22 +263,15 @@ function ResumeAnalyzer() {
 
                                 </div>
 
-
                                 <button
                                     type="button"
-                                    onClick={
-                                        handleAnalyze
-                                    }
-                                    disabled={
-                                        analyzing
-                                    }
+                                    onClick={handleAnalyze}
+                                    disabled={analyzing}
                                     className="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
                                 >
-
                                     {analyzing
                                         ? "Analyzing Resume..."
                                         : "Analyze Resume"}
-
                                 </button>
 
                             </div>
@@ -291,36 +280,21 @@ function ResumeAnalyzer() {
 
                     )}
 
-
                     {analysis && (
-
                         <>
-                            <ResumeScore
-                                analysis={
-                                    analysis
-                                }
-                            />
+                            <ResumeScore analysis={analysis} />
 
                             <div className="mt-6">
-
-                                <ResumeAnalysis
-                                    analysis={
-                                        analysis
-                                    }
-                                />
-
+                                <ResumeAnalysis analysis={analysis} />
                             </div>
                         </>
-
                     )}
 
                 </section>
-
             )}
 
         </DashboardLayout>
     );
 }
-
 
 export default ResumeAnalyzer;

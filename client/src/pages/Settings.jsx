@@ -365,7 +365,7 @@ function Settings() {
           <SettingHeader
             icon={Bell}
             title="Notifications"
-            description="Choose which updates you want to receive."
+            description="Control which activity updates and practice reminders appear in the topbar notification menu."
           />
 
           <div className="mt-6 space-y-4">
