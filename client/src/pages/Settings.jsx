@@ -146,6 +146,8 @@ function Settings() {
 
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(DEFAULT_SETTINGS));
 
+    window.dispatchEvent(new CustomEvent("app-settings-change"));
+
     handleThemeChange("system");
 
     setSaved(true);

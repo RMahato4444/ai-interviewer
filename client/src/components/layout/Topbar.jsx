@@ -65,17 +65,39 @@ function Topbar({ setMobileOpen }) {
                 setDataLoading(true);
                 setDataError("");
 
-                const [interviewData, resumeData] = await Promise.all([
+                const [interviewResult, resumeResult] = await Promise.allSettled([
                     getInterviews(),
                     getResumes(),
                 ]);
 
                 if (!active) return;
 
+                const unavailable = [];
+
+                if (interviewResult.status === "rejected") {
+                    unavailable.push("interview history");
+                }
+
+                if (resumeResult.status === "rejected") {
+                    unavailable.push("resumes");
+                }
+
                 setSearchData({
-                    interviews: interviewData.interviews || [],
-                    resumes: resumeData.resumes || [],
+                    interviews:
+                        interviewResult.status === "fulfilled"
+                            ? interviewResult.value.interviews || []
+                            : [],
+                    resumes:
+                        resumeResult.status === "fulfilled"
+                            ? resumeResult.value.resumes || []
+                            : [],
                 });
+
+                setDataError(
+                    unavailable.length
+                        ? "Some results are unavailable: " + unavailable.join(" and ") + "."
+                        : ""
+                );
             } catch (error) {
                 if (!active) return;
 
@@ -232,6 +254,7 @@ function Topbar({ setMobileOpen }) {
             })
             .map((interview) => {
                 const completed = interview.status === "completed";
+                const cancelled = interview.status === "cancelled";
                 const id = interview._id;
 
                 return {
@@ -246,7 +269,9 @@ function Topbar({ setMobileOpen }) {
                             : ""),
                     to: completed
                         ? "/interview/result/" + id
-                        : "/interview/live/" + id,
+                        : cancelled
+                            ? "/history"
+                            : "/interview/live/" + id,
                     icon: "interview",
                 };
             });
@@ -263,7 +288,10 @@ function Topbar({ setMobileOpen }) {
                         ? "Analyzed · " + resume.aiAnalysis.overallScore + "% score"
                         : "Uploaded · Analysis pending",
                 to: "/resume",
-                state: { resumeId: resume._id },
+                state: {
+                    resumeId: resume._id,
+                    resume,
+                },
                 icon: "resume",
             }));
 
@@ -390,10 +418,6 @@ function Topbar({ setMobileOpen }) {
                                 <p className="px-4 py-6 text-sm text-slate-500">
                                     Searching your workspace...
                                 </p>
-                            ) : dataError ? (
-                                <p className="px-4 py-6 text-sm text-red-600">
-                                    {dataError}
-                                </p>
                             ) : searchResults.length > 0 ? (
                                 <div className="max-h-80 overflow-y-auto p-2">
                                     {searchResults.map((result) => (
@@ -432,6 +456,10 @@ function Topbar({ setMobileOpen }) {
                                         </button>
                                     ))}
                                 </div>
+                            ) : dataError ? (
+                                <p className="px-4 py-6 text-sm text-red-600">
+                                    {dataError}
+                                </p>
                             ) : (
                                 <p className="px-4 py-6 text-sm text-slate-500">
                                     No matching pages, interviews or resumes found.

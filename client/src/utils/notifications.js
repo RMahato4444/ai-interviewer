@@ -139,7 +139,10 @@ export function buildNotifications(
                     "% score. View your analysis.",
                 createdAt: updatedAt,
                 to: "/resume",
-                state: { resumeId: resume._id },
+                state: {
+                    resumeId: resume._id,
+                    resume,
+                },
             });
         });
     }

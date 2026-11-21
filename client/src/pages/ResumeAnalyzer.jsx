@@ -21,7 +21,6 @@ import ResumeAnalysis from "../components/resume/ResumeAnalysis";
 
 import {
     analyzeResume,
-    getResumeById,
 } from "../services/api";
 
 function ResumeAnalyzer() {
@@ -31,7 +30,6 @@ function ResumeAnalyzer() {
     const [resume, setResume] = useState(null);
     const [analysis, setAnalysis] = useState(null);
     const [analyzing, setAnalyzing] = useState(false);
-    const [loadingSavedResume, setLoadingSavedResume] = useState(false);
     const [error, setError] = useState("");
 
     // ========================================
@@ -40,55 +38,31 @@ function ResumeAnalyzer() {
 
     useEffect(() => {
         const resumeId = location.state?.resumeId;
+        const selectedResume = location.state?.resume;
 
-        if (!resumeId) return;
+        if (!resumeId || !selectedResume) return;
 
-        let cancelled = false;
+        const selectedResumeId =
+            selectedResume._id || selectedResume.id;
 
-        const loadSavedResume = async () => {
-            try {
-                setLoadingSavedResume(true);
-                setError("");
+        if (String(selectedResumeId) !== String(resumeId)) return;
 
-                const data = await getResumeById(resumeId);
-
-                if (cancelled) return;
-
-                const savedResume = {
-                    ...data.resume,
-                    id: data.resume._id || data.resume.id,
-                };
-
-                setResume(savedResume);
-                setAnalysis(savedResume.aiAnalysis || null);
-            } catch (error) {
-                if (cancelled) return;
-
-                console.error("LOAD SAVED RESUME ERROR:", error);
-
-                setError(
-                    error.message || "Failed to load the selected resume."
-                );
-            } finally {
-                if (!cancelled) {
-                    setLoadingSavedResume(false);
-
-                    // Remove the one-time navigation state so refreshing
-                    // the page does not repeat the lookup.
-                    navigate(location.pathname, {
-                        replace: true,
-                        state: null,
-                    });
-                }
-            }
+        const savedResume = {
+            ...selectedResume,
+            id: selectedResumeId,
         };
 
-        loadSavedResume();
+        setResume(savedResume);
+        setAnalysis(savedResume.aiAnalysis || null);
+        setError("");
 
-        return () => {
-            cancelled = true;
-        };
-    }, [location.state?.resumeId, location.pathname, navigate]);
+        // Clear the one-time navigation state after loading the selected
+        // resume record already returned by the user's resume list.
+        navigate(location.pathname, {
+            replace: true,
+            state: null,
+        });
+    }, [location.state, location.pathname, navigate]);
 
     // ========================================
     // RESUME UPLOAD SUCCESS
@@ -190,14 +164,6 @@ function ResumeAnalyzer() {
             {error && (
                 <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
                     {error}
-                </div>
-            )}
-
-            {/* Loading saved search result */}
-
-            {loadingSavedResume && (
-                <div className="mb-6 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
-                    Loading selected resume...
                 </div>
             )}
 

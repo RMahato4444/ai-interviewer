@@ -1,11 +1,11 @@
-const API_URL = import.meta.env.VITE_API_URL + "/api";
+const API_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 // ========================================
 // GET TOKEN
 // ========================================
 
 const getToken = () => {
-    return localStorage.getItem("token");
+  return localStorage.getItem("token");
 };
 
 // ========================================
@@ -13,35 +13,35 @@ const getToken = () => {
 // ========================================
 
 const apiRequest = async (endpoint, options = {}) => {
-    const token = getToken();
+  const token = getToken();
 
-    const headers = {
-        "Content-Type": "application/json",
-        ...(options.headers || {}),
-    };
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {}),
+  };
 
-    if (token) {
-        headers.Authorization = "Bearer " + token;
-    }
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
-    const response = await fetch(API_URL + endpoint, {
-        ...options,
-        headers,
-    });
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers,
+  });
 
-    let data;
+  let data;
 
-    try {
-        data = await response.json();
-    } catch {
-        data = {};
-    }
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
 
-    if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
-    }
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
 
-    return data;
+  return data;
 };
 
 // ========================================
@@ -49,13 +49,13 @@ const apiRequest = async (endpoint, options = {}) => {
 // ========================================
 
 export const checkServer = async () => {
-    const response = await fetch(API_URL + "/health");
+  const response = await fetch(`${API_URL}/health`);
 
-    if (!response.ok) {
-        throw new Error("Server request failed");
-    }
+  if (!response.ok) {
+    throw new Error("Server request failed");
+  }
 
-    return response.json();
+  return response.json();
 };
 
 // ========================================
@@ -63,10 +63,11 @@ export const checkServer = async () => {
 // ========================================
 
 export const createInterview = async (interviewData) => {
-    return apiRequest("/interview", {
-        method: "POST",
-        body: JSON.stringify(interviewData),
-    });
+  return apiRequest("/interview", {
+    method: "POST",
+
+    body: JSON.stringify(interviewData),
+  });
 };
 
 // ========================================
@@ -74,9 +75,9 @@ export const createInterview = async (interviewData) => {
 // ========================================
 
 export const startInterview = async (interviewId) => {
-    return apiRequest("/interview/" + interviewId + "/start", {
-        method: "POST",
-    });
+  return apiRequest(`/interview/${interviewId}/start`, {
+    method: "POST",
+  });
 };
 
 // ========================================
@@ -84,7 +85,7 @@ export const startInterview = async (interviewId) => {
 // ========================================
 
 export const getInterview = async (interviewId) => {
-    return apiRequest("/interview/" + interviewId);
+  return apiRequest(`/interview/${interviewId}`);
 };
 
 // ========================================
@@ -92,10 +93,13 @@ export const getInterview = async (interviewId) => {
 // ========================================
 
 export const submitAnswer = async (interviewId, answer) => {
-    return apiRequest("/interview/" + interviewId + "/answer", {
-        method: "POST",
-        body: JSON.stringify({ answer }),
-    });
+  return apiRequest(`/interview/${interviewId}/answer`, {
+    method: "POST",
+
+    body: JSON.stringify({
+      answer,
+    }),
+  });
 };
 
 // ========================================
@@ -103,7 +107,7 @@ export const submitAnswer = async (interviewId, answer) => {
 // ========================================
 
 export const getInterviewResult = async (interviewId) => {
-    return apiRequest("/interview/" + interviewId + "/result");
+  return apiRequest(`/interview/${interviewId}/result`);
 };
 
 // ========================================
@@ -111,7 +115,7 @@ export const getInterviewResult = async (interviewId) => {
 // ========================================
 
 export const getInterviews = async () => {
-    return apiRequest("/interview");
+  return apiRequest("/interview");
 };
 
 // ========================================
@@ -119,9 +123,9 @@ export const getInterviews = async () => {
 // ========================================
 
 export const deleteInterview = async (interviewId) => {
-    return apiRequest("/interview/" + interviewId, {
-        method: "DELETE",
-    });
+  return apiRequest(`/interview/${interviewId}`, {
+    method: "DELETE",
+  });
 };
 
 // ========================================
@@ -129,36 +133,37 @@ export const deleteInterview = async (interviewId) => {
 // ========================================
 
 export const uploadResume = async (file) => {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    const formData = new FormData();
-    formData.append("resume", file);
+  const formData = new FormData();
 
-    const headers = {};
+  formData.append("resume", file);
 
-    if (token) {
-        headers.Authorization = "Bearer " + token;
-    }
+  const headers = {};
 
-    const response = await fetch(API_URL + "/resume/upload", {
-        method: "POST",
-        headers,
-        body: formData,
-    });
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
-    let data;
+  const response = await fetch(`${API_URL}/resume/upload`, {
+    method: "POST",
+    headers,
+    body: formData,
+  });
 
-    try {
-        data = await response.json();
-    } catch {
-        data = {};
-    }
+  let data;
 
-    if (!response.ok) {
-        throw new Error(data.message || "Failed to upload resume");
-    }
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
 
-    return data;
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to upload resume");
+  }
+
+  return data;
 };
 
 // ========================================
@@ -166,9 +171,9 @@ export const uploadResume = async (file) => {
 // ========================================
 
 export const analyzeResume = async (resumeId) => {
-    return apiRequest("/resume/" + resumeId + "/analyze", {
-        method: "POST",
-    });
+  return apiRequest(`/resume/${resumeId}/analyze`, {
+    method: "POST",
+  });
 };
 
 // ========================================
@@ -176,15 +181,7 @@ export const analyzeResume = async (resumeId) => {
 // ========================================
 
 export const getResumes = async () => {
-    return apiRequest("/resume");
-};
-
-// ========================================
-// GET SINGLE RESUME
-// ========================================
-
-export const getResumeById = async (resumeId) => {
-    return apiRequest("/resume/" + resumeId);
+  return apiRequest("/resume");
 };
 
 // ========================================
@@ -192,7 +189,7 @@ export const getResumeById = async (resumeId) => {
 // ========================================
 
 export const getCurrentUser = async () => {
-    return apiRequest("/auth/me");
+  return apiRequest("/auth/me");
 };
 
 // ========================================
@@ -200,10 +197,11 @@ export const getCurrentUser = async () => {
 // ========================================
 
 export const updateProfile = async (profileData) => {
-    return apiRequest("/auth/profile", {
-        method: "PUT",
-        body: JSON.stringify(profileData),
-    });
+  return apiRequest("/auth/profile", {
+    method: "PUT",
+
+    body: JSON.stringify(profileData),
+  });
 };
 
 // ========================================
@@ -211,36 +209,39 @@ export const updateProfile = async (profileData) => {
 // ========================================
 
 export const uploadProfileImage = async (file) => {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    const formData = new FormData();
-    formData.append("profileImage", file);
+  const formData = new FormData();
 
-    const headers = {};
+  formData.append("profileImage", file);
 
-    if (token) {
-        headers.Authorization = "Bearer " + token;
-    }
+  const headers = {};
 
-    const response = await fetch(API_URL + "/auth/profile/image", {
-        method: "PUT",
-        headers,
-        body: formData,
-    });
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
-    let data;
+  const response = await fetch(`${API_URL}/auth/profile/image`, {
+    method: "PUT",
 
-    try {
-        data = await response.json();
-    } catch {
-        data = {};
-    }
+    headers,
 
-    if (!response.ok) {
-        throw new Error(data.message || "Failed to upload profile image");
-    }
+    body: formData,
+  });
 
-    return data;
+  let data;
+
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to upload profile image");
+  }
+
+  return data;
 };
 
 // ========================================
@@ -248,7 +249,7 @@ export const uploadProfileImage = async (file) => {
 // ========================================
 
 export const removeProfileImage = async () => {
-    return apiRequest("/auth/profile/image", {
-        method: "DELETE",
-    });
+  return apiRequest("/auth/profile/image", {
+    method: "DELETE",
+  });
 };
